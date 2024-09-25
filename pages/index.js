@@ -1,6 +1,20 @@
 import Head from "next/head";
 import Link from "next/link";
 import styles from "../styles/Home.module.css";
+import fs from 'fs';
+import path from 'path';
+
+export async function getStaticProps() {
+    const filePath = path.join(process.cwd(), 'data', 'posts.json');
+    const jsonData = fs.readFileSync(filePath, 'utf-8'); // Read as UTF-8
+    const { posts } = JSON.parse(jsonData); // Extract posts array
+
+    return {
+        props: {
+            externalPostData: posts, // Pass the posts array
+        },
+    };
+}
 
 export default function Home({ externalPostData }) {
     return (
@@ -47,13 +61,13 @@ export default function Home({ externalPostData }) {
     );
 }
 
-export async function getStaticProps() {
-    const apiURL = "http://localhost:3001/posts";
-    const response = await fetch(apiURL);
-    const data = await response.json();
-    return {
-        props: {
-            externalPostData: data,
-        },
-    };
-}
+// export async function getStaticProps() {
+//     const apiURL = "http://localhost:3001/posts";
+//     const response = await fetch(apiURL);
+//     const data = await response.json();
+//     return {
+//         props: {
+//             externalPostData: data,
+//         },
+//     };
+// }
